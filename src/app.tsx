@@ -9,13 +9,15 @@ export function App() {
   const searchTimeout = useSignal<NodeJS.Timeout | null>(null);
 
   const searchActors = (searchTerm: string) => {
+    if (searchTerm.length < 1) return;
+
     searchTimeout.value && clearTimeout(searchTimeout.value);
 
     searchTimeout.value = setTimeout(async () => {
       const { data } = await db
         .from('actors')
         .select('name')
-        .ilike('name', `%${searchTerm}%`)
+        .ilike('name', `%${searchTerm.trim()}%`)
         .limit(10);
 
       if (data) {
@@ -24,7 +26,7 @@ export function App() {
     }, 300);
   };
 
-  const onActorSelect = async (actors: string[]) => {
+  const onActorSelect = async (actors: ActorName[]) => {
     if (actors.length < 2) return;
 
     const { data } = await db
@@ -44,13 +46,13 @@ export function App() {
     <AppShell>
       <AppShell.Main>
         <MultiSelect
-          searchable
           onSearchChange={seachTerm => searchActors(seachTerm)}
           onChange={selectedActors => onActorSelect(selectedActors)}
           data={actors.value}
           placeholder="Select 2 or more actors"
           size="md"
           leftSection={<JoinIcon />}
+          searchable
           clearable
         />
         <Container fluid px={0} py={16}>
