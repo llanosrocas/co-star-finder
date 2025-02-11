@@ -1,5 +1,6 @@
 import { AppShell, Container, MultiSelect, Table, Text } from '@mantine/core';
 import { useSignal } from '@preact/signals';
+import { useEffect } from 'preact/hooks';
 import { db } from './lib/supabase';
 import { ActorName, Movie } from './types';
 
@@ -42,7 +43,10 @@ export function App() {
 
   const formatImdbId = (id: Movie['imdbId']) => id.toString().padStart(7, '0');
 
-  useEffect(() => () => searchTimeout.value && clearTimeout(searchTimeout.value), []);
+  useEffect(
+    () => () => searchTimeout.value && clearTimeout(searchTimeout.value),
+    [],
+  );
 
   return (
     <AppShell>
