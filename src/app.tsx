@@ -42,6 +42,8 @@ export function App() {
 
   const formatImdbId = (id: Movie['imdbId']) => id.toString().padStart(7, '0');
 
+  useEffect(() => () => searchTimeout.value && clearTimeout(searchTimeout.value), []);
+
   return (
     <AppShell>
       <AppShell.Main>
